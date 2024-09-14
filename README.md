@@ -42,7 +42,7 @@ So basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But writt
 
 Build from source:
 
-1. Uninstall [`bun`] or remove `~/.bun/bin` from your path
+1. Uninstall [`bun`](https://bun.sh/docs/installation#uninstall) or remove `~/.bun/bin` from your path
 2. Install [Zig](https://ziglang.org/)
 3. Build the executables (`bun`, `bunx`, `bunv`)
    ```sh
@@ -63,7 +63,7 @@ $ bun i
 $ bunx oxlint@latest
 ```
 
-If you haven't installed a project's version of `bun`, you'll be prompted to install it when running any `bun` or `bunx` commands.
+If you haven't installed the version of Bun required by your project, you'll be prompted to install it when running any `bun` or `bunx` commands.
 
 Bunv also ships its own executable: `bunv`. Right now, it just lists the versions of Bun it has installed:
 
