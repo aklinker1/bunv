@@ -1,9 +1,5 @@
 <h1 align="center">Bunv</h1>
 <div align="center">
-   
-</div>
-
-<div align="center">
   <a href="https://github.com/aklinker1/bunv/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
   <a href="https://github.com/aklinker1/bunv"><img src="https://img.shields.io/github/stars/aklinker1/bunv?style=social" alt="GitHub stars"></a>
 </div>
@@ -114,7 +110,7 @@ jobs:
 
 ## Benchmark
 
-If you're using Bun, you probably love the CLI's incredible speed - so do I. That's why the only benchmark I focused on is how much overhead it takes for Bunv to lookup and execute the correct version of bun.
+If you're using Bun, you probably love the CLI's incredible speed - so do I. That's why the only benchmark I focused on is how much overhead it takes for Bunv to lookup and execute the correct version of Bun.
 
 So this benchmark measures the time it takes for `bun --version` to run.
 
