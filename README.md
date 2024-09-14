@@ -37,6 +37,10 @@ So basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But writt
 - [ ] Use the latest version of Bun when not in a project
 - [ ] Look up the directory tree to find the version file
 - [ ] Prebuilt binaries and an install script
+- [ ] OS Support
+   - [x] Linux
+   - [x] Mac
+   - [ ] Windows
 
 ## Installation
 
