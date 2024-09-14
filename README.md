@@ -1,4 +1,12 @@
-# Bunv
+<h1 align="center">Bunv</h1>
+<div align="center">
+   
+</div>
+
+<div align="center">
+  <a href="https://github.com/aklinker1/bunv/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+  <a href="https://github.com/aklinker1/bunv"><img src="https://img.shields.io/github/stars/aklinker1/bunv?style=social" alt="GitHub stars"></a>
+</div>
 
 Zero config wrapper around [Bun](https://bun.sh/) that automatically downloads, manages, and executes the version of `bun` required by each of your projects.
 
@@ -28,6 +36,7 @@ So basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But writt
       ```
 - [ ] Use the latest version of Bun when not in a project
 - [ ] Look up the directory tree to find the version file
+- [ ] Prebuilt binaries and an install script
 
 ## Installation
 
@@ -43,7 +52,7 @@ Build from source:
    ```sh
    export PATH="$HOME/.bunv/bin:$PATH"
    ```
-5. Double check that sure `which bun` outputs `~/.bunv/bin/bun`
+5. Double check that `which bun` outputs `~/.bunv/bin/bun`
 
 ## Usage
 
@@ -56,7 +65,7 @@ $ bunx oxlint@latest
 
 If you haven't installed a project's version of `bun`, you'll be prompted to install it when running any `bun` or `bunx` commands.
 
-Bunv also ships it's own executable: `bunv`. Right now, it just lists the versions of Bun it has installed:
+Bunv also ships its own executable: `bunv`. Right now, it just lists the versions of Bun it has installed:
 
 ```sh
 $ bunv
@@ -83,6 +92,22 @@ If you're not in a project, Bunv will use the newest version installed locally o
 
 The `setup/bun` action already supports all the version files Bunv supports - that means you don't have to install Bunv in CI - just use it locally.
 
+```yml
+# .github/workflows/validate
+on:
+  pull_request:
+
+jobs:
+  validate:
+    runs_on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: "package.json" # or ".tool-versions" or ".bun-version"
+      # ...
+```
+
 ## Benchmark
 
 If you're using Bun, you probably love the CLI's incredible speed - so do I. That's why the only benchmark I focused on is how much overhead it takes for Bunv to lookup and execute the correct version of bun.
@@ -107,7 +132,7 @@ Summary
 1.5ms without `bunv` vs 2.0ms with it. While it's technically 1.37x slower, it's only ***0.5ms of overhead*** - unnoticable to a human.
 
 > [!NOTE]
-> `hyperfine` strruggles to accurately benchmark commands that exit in less than 5ms... If anyone knows a better way to benchmark this, please open a PR!
+> `hyperfine` struggles to accurately benchmark commands that exit in less than 5ms... If anyone knows a better way to benchmark this, please open a PR!
 
 ## Debugging
 
