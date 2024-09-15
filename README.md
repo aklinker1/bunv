@@ -30,8 +30,8 @@ So basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But writt
       ```txt
       1.1.26
       ```
-- [ ] Use the latest version of Bun when not in a project
-- [ ] Look up the directory tree to find the version file
+- [x] Use the latest version of Bun when not in a project
+- [x] Look up the directory tree to find the version file
 - [ ] Prebuilt binaries and an install script
 - [ ] OS Support
    - [x] Linux
