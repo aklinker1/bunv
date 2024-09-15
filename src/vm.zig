@@ -105,8 +105,7 @@ pub fn getLatestLocalVersion(allocator: mem.Allocator, is_debug: bool, config_di
 
 pub fn getLatestRemoteVersion(_: mem.Allocator, is_debug: bool) ![]u8 {
     if (is_debug) std.debug.print("Getting latest remote verison...\n", .{});
-
-    return error.NoBunVersionFound;
+    return error.Todo;
 }
 
 pub fn ensureVersionDownloaded(allocator: mem.Allocator, config_dir: []const u8, version: []const u8) !void {
