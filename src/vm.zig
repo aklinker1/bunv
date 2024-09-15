@@ -46,29 +46,48 @@ pub fn detectProjectVersion(allocator: mem.Allocator, is_debug: bool) !?[]const 
         // ToolVersionsFile.init(),
     };
 
-    for (files) |version_file| {
-        const file = fs.cwd().openFile(version_file.name, .{}) catch |err| switch (err) {
-            error.FileNotFound => continue,
-            else => |e| return e,
-        };
-        defer file.close();
+    var current_dir = try fs.cwd().realpathAlloc(allocator, ".");
+    defer allocator.free(current_dir);
 
-        const file_size = try file.getEndPos();
-        const buffer = try std.heap.page_allocator.alloc(u8, file_size);
-        defer std.heap.page_allocator.free(buffer);
+    while (true) {
+        if (is_debug) std.debug.print("Checking dir: {s}\n", .{current_dir});
+        for (files) |version_file| {
+            const file_path = try fs.path.join(allocator, &[_][]const u8{ current_dir, version_file.name });
+            defer allocator.free(file_path);
 
-        _ = try file.readAll(buffer);
-        if (version_file.extractBunVersion(allocator, buffer)) |version| {
-            if (is_debug) std.debug.print("Found v{s} in {s}\n", .{ version, version_file.name });
-            return try allocator.dupe(u8, version);
+            const file = fs.openFileAbsolute(file_path, .{}) catch |err| switch (err) {
+                error.FileNotFound => continue,
+                else => |e| return e,
+            };
+            defer file.close();
+
+            const file_size = try file.getEndPos();
+            const buffer = try allocator.alloc(u8, file_size);
+            defer allocator.free(buffer);
+
+            _ = try file.readAll(buffer);
+            if (version_file.extractBunVersion(allocator, buffer)) |version| {
+                if (is_debug) std.debug.print("Found v{s} in {s}\n", .{ version, file_path });
+                return try allocator.dupe(u8, version);
+            }
         }
+
+        // Move up to the parent directory
+        const parent_dir = fs.path.dirname(current_dir);
+        if (parent_dir == null or mem.eql(u8, parent_dir.?, current_dir)) {
+            // We've reached the root directory, stop searching
+            break;
+        }
+        const new_dir = try fs.path.join(allocator, &[_][]const u8{parent_dir.?});
+        allocator.free(current_dir);
+        current_dir = new_dir;
     }
 
-    return error.NoBunVersionFound;
+    return null;
 }
 
 pub fn getLatestLocalVersion(allocator: mem.Allocator, is_debug: bool, config_dir: []const u8) !?[]const u8 {
-    if (is_debug) std.debug.print("Getting latest local verison...", .{});
+    if (is_debug) std.debug.print("Getting latest local verison...\n", .{});
 
     const installed_versions = try getInstalledVersions(allocator, config_dir);
     defer {
@@ -78,15 +97,16 @@ pub fn getLatestLocalVersion(allocator: mem.Allocator, is_debug: bool, config_di
         installed_versions.deinit();
     }
 
-    if (installed_versions.items.len == 1) {
+    if (installed_versions.items.len != 1) {
         return null;
     }
     return try allocator.dupe(u8, installed_versions.items[0]);
 }
 
 pub fn getLatestRemoteVersion(_: mem.Allocator, is_debug: bool) ![]u8 {
-    if (is_debug) std.debug.print("Getting latest remote verison...", .{});
-    return error.Todo;
+    if (is_debug) std.debug.print("Getting latest remote verison...\n", .{});
+
+    return error.NoBunVersionFound;
 }
 
 pub fn ensureVersionDownloaded(allocator: mem.Allocator, config_dir: []const u8, version: []const u8) !void {
@@ -194,8 +214,11 @@ const PackageJsonVersionFile = struct {
         defer parsed.deinit();
 
         // "bun@X.Y.Z"
-        const package_manager = parsed.value.object.get("packageManager").?.string;
-        return allocator.dupe(u8, package_manager[4..]) catch return null;
+        const package_manager = parsed.value.object.get("packageManager");
+        if (package_manager) |value| {
+            return allocator.dupe(u8, value.string[4..]) catch return null;
+        }
+        return null;
     }
 };
 
