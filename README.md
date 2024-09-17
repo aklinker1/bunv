@@ -160,11 +160,6 @@ $ zig build --release=fast --prefix ~/.bunv
 
 ## Release
 
-Prebuild binaries for all platforms:
+To create a release, run the ["Release" action](https://github.com/aklinker1/bunv/actions/workflows/release.yml).
 
-```sh
-$ zig build --summary all -Doptimize=ReleaseFast -Dtarget=aarch64-macos
-$ zig build --summary all -Doptimize=ReleaseFast -Dtarget=x86_64-macos
-$ zig build --summary all -Doptimize=ReleaseFast -Dtarget=aarch64-linux
-$ zig build --summary all -Doptimize=ReleaseFast -Dtarget=x86_64-linux
-```
+This project uses conventional commits, so the release workflow will bump the version and create the GitHub release automatically.
