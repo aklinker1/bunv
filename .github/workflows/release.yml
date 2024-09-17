@@ -2,7 +2,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
+  build:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -26,3 +26,5 @@ jobs:
       - if: matrix.os == 'windows-latest'
         run: |
           zig build --summary all -Doptimize=ReleaseFast -Dtarget=x86_64-windows
+
+      - run: ls zig-out/bin
