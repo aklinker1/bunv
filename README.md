@@ -31,6 +31,7 @@ So basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But writt
       1.1.26
       ```
 - [x] Use the latest version of Bun when not in a project
+- [x] Fetch the latest release from GitHub if no versions are downloaded yet when outside a project
 - [x] Look up the directory tree to find the version file
 - [ ] Prebuilt binaries and an install script
 - [ ] OS Support

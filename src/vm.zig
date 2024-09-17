@@ -3,6 +3,7 @@ const os = std.os;
 const mem = std.mem;
 const fs = std.fs;
 const json = std.json;
+const http = std.http;
 const utils = @import("utils.zig");
 const c = @import("colors.zig");
 
@@ -105,9 +106,46 @@ pub fn getLatestLocalVersion(allocator: mem.Allocator, is_debug: bool, config_di
     return try allocator.dupe(u8, installed_versions.items[0]);
 }
 
-pub fn getLatestRemoteVersion(_: mem.Allocator, is_debug: bool) ![]u8 {
+pub fn getLatestRemoteVersion(allocator: mem.Allocator, is_debug: bool) ![]const u8 {
     if (is_debug) std.debug.print("Getting latest remote verison...\n", .{});
-    return error.Todo;
+
+    var client = http.Client{ .allocator = allocator };
+    defer client.deinit();
+
+    const accept_header = http.Header{
+        .name = "accept",
+        .value = "application/json",
+    };
+
+    const uri = try std.Uri.parse("https://ungh.cc/repos/oven-sh/bun/releases/latest");
+    const buf = try allocator.alloc(u8, 1024 * 1024 * 4);
+    defer allocator.free(buf);
+    var req = try client.open(
+        .GET,
+        uri,
+        .{ .server_header_buffer = buf, .keep_alive = false, .extra_headers = &[_]http.Header{accept_header} },
+    );
+    defer req.deinit();
+
+    try req.send();
+    try req.finish();
+    try req.wait();
+
+    var rdr = req.reader();
+    const body = try rdr.readAllAlloc(allocator, 1024 * 1024 * 4);
+    defer allocator.free(body);
+    if (is_debug) std.debug.print("Latest release: {s}\n", .{body});
+
+    const parsed = try json.parseFromSlice(std.json.Value, allocator, body, .{});
+    defer parsed.deinit();
+
+    const release = parsed.value.object.get("release").?.object;
+    // "bun-v1.1.27"
+    const gitTag = release.get("tag").?.string;
+
+    // strip off "bun-v"
+    const tag = gitTag[5..];
+    return allocator.dupe(u8, tag);
 }
 
 pub fn ensureVersionDownloaded(allocator: mem.Allocator, config_dir: []const u8, version: []const u8) !void {
