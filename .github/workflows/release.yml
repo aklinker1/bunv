@@ -10,9 +10,7 @@ jobs:
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v4
-      - uses: goto-bus-stop/setup-zig@v2
-        with:
-          version: 0.13.0
+      - uses: ./.github/actions/setup
       - run: |
           zig build --summary all -Doptimize=ReleaseFast -Dtarget=aarch64-macos
           zig build --summary all -Doptimize=ReleaseFast -Dtarget=x86_64-macos
@@ -24,5 +22,4 @@ jobs:
       - run: |
           zig build --summary all -Doptimize=ReleaseFast -Dtarget=x86_64-windows
         if: matrix.os == 'windows-latest'
-
       - run: ls zig-out/bin
