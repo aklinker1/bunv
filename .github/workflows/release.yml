@@ -12,16 +12,16 @@ jobs:
           #   os: windows
           #   arch: x86_64
           # MacOS
-          - runner: macos-latest
-            os: macos
-            arch: x86_64
-          - runner: macos-latest
-            os: macos
-            arch: aarch64
-          # Linux
-          - runner: ubuntu-latest
-            os: linux
-            arch: x86_64
+          # - runner: macos-latest
+          #   os: macos
+          #   arch: x86_64
+          # - runner: macos-latest
+          #   os: macos
+          #   arch: aarch64
+          # # Linux
+          # - runner: ubuntu-latest
+          #   os: linux
+          #   arch: x86_64
           - runner: ubuntu-latest
             os: linux
             arch: aarch64
