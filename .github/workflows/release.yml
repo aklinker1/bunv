@@ -6,24 +6,44 @@ jobs:
   build:
     strategy:
       matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-          # TODO: Windows support
-          # - windows-latest
-    runs-on: ${{matrix.os}}
+        include:
+          # TODO: Windows
+          # - runner: windows-latest
+          #   os: windows
+          #   arch: x86_64
+          # MacOS
+          - runner: macos-latest
+            os: macos
+            arch: x86_64
+          - runner: macos-latest
+            os: macos
+            arch: aarch64
+          # Linux
+          - runner: ubuntu-latest
+            os: linux
+            arch: x86_64
+          - runner: ubuntu-latest
+            os: linux
+            arch: aarch64
+      fail-fast: false
+
+    runs-on: ${{matrix.runner}}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: |
           zig build --summary all -Doptimize=ReleaseFast -Dtarget=aarch64-macos
           zig build --summary all -Doptimize=ReleaseFast -Dtarget=x86_64-macos
-        if: matrix.os == 'macos-latest'
+        if: matrix.runner == 'macos-latest'
       - run: |
           zig build --summary all -Doptimize=ReleaseFast -Dtarget=aarch64-linux
           zig build --summary all -Doptimize=ReleaseFast -Dtarget=x86_64-linux
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.runner == 'ubuntu-latest'
       - run: |
           zig build --summary all -Doptimize=ReleaseFast -Dtarget=x86_64-windows
-        if: matrix.os == 'windows-latest'
-      - run: ls zig-out/bin
+        if: matrix.runner == 'windows-latest'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bunv-${{matrix.os}}-${{matrix.arch}}
+          path: zig-out/bin/*
+          if-no-files-found: error
