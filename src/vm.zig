@@ -90,6 +90,7 @@ pub fn getLatestLocalVersion(allocator: mem.Allocator, is_debug: bool, config_di
     if (is_debug) std.debug.print("Getting latest local verison...\n", .{});
 
     const installed_versions = try getInstalledVersions(allocator, config_dir);
+    if (is_debug) std.debug.print("{d} versions: {s}\n", .{ installed_versions.items.len, installed_versions.items });
     defer {
         for (installed_versions.items) |item| {
             allocator.free(item);
@@ -97,9 +98,10 @@ pub fn getLatestLocalVersion(allocator: mem.Allocator, is_debug: bool, config_di
         installed_versions.deinit();
     }
 
-    if (installed_versions.items.len != 1) {
+    if (installed_versions.items.len == 0) {
         return null;
     }
+    // TODO: installed versions are not sorted, so naively assuming the first item is the latest is wrong.
     return try allocator.dupe(u8, installed_versions.items[0]);
 }
 
