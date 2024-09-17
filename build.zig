@@ -1,11 +1,18 @@
 const std = @import("std");
 const json = std.json;
+const builtin = @import("builtin");
 
 const bun = "bun";
 const bunx = "bunx";
 const bunv = "bunv";
 
 pub fn build(b: *std.Build) !void {
+    const required_zig_version = try std.SemanticVersion.parse("0.13.0");
+    if (std.SemanticVersion.order(builtin.zig_version, required_zig_version) != .eq) {
+        std.debug.print("Bunv requires Zig 0.13.0, got {}", .{builtin.zig_version});
+        return error.InvalidZigVersion;
+    }
+
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
