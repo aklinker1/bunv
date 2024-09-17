@@ -6,42 +6,36 @@
 
 Zero config wrapper around [Bun](https://bun.sh/) that automatically downloads, manages, and executes the version of `bun` required by each of your projects.
 
-So basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But written in Zig for [basically zero overhead](#benchmark).
-
-> This is my first Zig project, so if you know Zig, look at the code, and have feedback, please share it with me!
+Basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But written in Zig for [basically zero overhead](#benchmark).
 
 ## Features
 
-- [x] Automatic versioning for `bun`
-- [x] Automatic versioning for `bunx`
-- [x] `bunv` CLI
-- [ ] Version files
-   - [x] `package.json` support
-      ```json
-      {
-        "packageManager": "bun@1.1.26"
-      }
-      ```
-   - [ ] `.tool-versions` support
-      ```txt
-      bun 1.1.26
-      ```
-   - [ ] `.bun-version` support
-      ```txt
-      1.1.26
-      ```
-- [x] Use the latest version of Bun when not in a project
-- [x] Fetch the latest release from GitHub if no versions are downloaded yet when outside a project
-- [x] Look up the directory tree to find the version file
-- [ ] Prebuilt binaries and an install script
-- [ ] OS Support
-   - [x] Linux
-   - [x] Mac
-   - [ ] Windows
+- Automatic version selection for `bun` and `bunx`
+- Manage installed versions with `bunv`
+- Read project version from `package.json`'s `packageManager` field, just like Corepack
+
+### Roadmap
+
+Goal of `bunv` is to provide a PoC for what version management might look like built into Bun. At the time of writing, that's basically done.
+
+That said, there's a couple of things left to do:
+
+- #5
+- #6
+- #7
+- #8
 
 ## Installation
 
-Build from source:
+### Use Prebuilt Binaries
+
+1. Uninstall [`bun`](https://bun.sh/docs/installation#uninstall) or remove `~/.bun/bin` from your path
+2. Go to the [latest release](https://github.com/aklinker1/bunv/releases/latest) and download the ZIP for your operating system
+3. Extract the ZIP and move the files into `~/.bunv/bin` (so you should have `~/.bunv/bin/bun`, `~/.bunv/bin/bunx`, and `~/.bunv/bin/bunv`)
+4. Add `~/.bunv/bin` to your `PATH`
+5. Double check that `which bun` outputs `~/.bunv/bin/bun`
+
+### Build from source
 
 1. Uninstall [`bun`](https://bun.sh/docs/installation#uninstall) or remove `~/.bun/bin` from your path
 2. Install [Zig](https://ziglang.org/)
