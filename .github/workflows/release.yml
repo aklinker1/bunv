@@ -31,17 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: |
-          zig build --summary all -Doptimize=ReleaseFast -Dtarget=aarch64-macos
-          zig build --summary all -Doptimize=ReleaseFast -Dtarget=x86_64-macos
-        if: matrix.runner == 'macos-latest'
-      - run: |
-          zig build --summary all -Doptimize=ReleaseFast -Dtarget=aarch64-linux
-          zig build --summary all -Doptimize=ReleaseFast -Dtarget=x86_64-linux
-        if: matrix.runner == 'ubuntu-latest'
-      - run: |
-          zig build --summary all -Doptimize=ReleaseFast -Dtarget=x86_64-windows
-        if: matrix.runner == 'windows-latest'
+      - run: zig build --summary all -Doptimize=ReleaseFast -Dtarget=${{matrix.arch}}-${{matrix.os}}
       - uses: actions/upload-artifact@v4
         with:
           name: bunv-${{matrix.os}}-${{matrix.arch}}
