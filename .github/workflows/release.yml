@@ -45,4 +45,7 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/download-artifact@v4
+        with:
+          path: .
+          merge-multiple: true
       - run: ls -R
