@@ -51,7 +51,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/download-artifact@v4
         with:
-          path: .
+          path: zig-out
           merge-multiple: true
       - id: changelog
         uses: TriPSs/conventional-changelog-action@v5
@@ -63,5 +63,5 @@ jobs:
         with:
           tag_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
-          files: "bunv-*.zip"
+          files: "zig-out/bunv-*.zip"
           make_latest: true
