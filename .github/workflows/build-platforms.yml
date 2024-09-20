@@ -1,0 +1,73 @@
+name: Build Platforms
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          # TODO: Windows
+          # - runner: windows-latest
+          #   os: windows
+          #   arch: x86_64
+          # MacOS
+          - runner: macos-latest
+            os: macos
+            arch: x86_64
+          - runner: macos-latest
+            os: macos
+            arch: aarch64
+          # Linux
+          - runner: ubuntu-latest
+            os: linux
+            arch: x86_64
+          - runner: ubuntu-latest
+            os: linux
+            arch: aarch64
+      fail-fast: false
+    runs-on: ${{matrix.runner}}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup
+
+      - run: zig build --summary all -Doptimize=ReleaseFast -Dtarget=${{matrix.arch}}-${{matrix.os}}
+
+      - if: matrix.runner == 'macos-latest'
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.APPLE_CERT_BASE64 }}
+          p12-password: ${{ secrets.APPLE_CERT_PASSWORD }}
+
+      - if: matrix.runner == 'macos-latest'
+        working-directory: zig-out/bin
+        run: |
+          echo "Signing..."
+          for binary in bun bunv bunx; do
+            codesign --force --options runtime --sign "${{ secrets.APPLE_CERT_NAME }}" "$binary"
+          done
+
+          echo "Notarizing..."
+          ditto -c -k --keepParent . binaries.zip
+          xcrun notarytool submit binaries.zip --wait \
+            --apple-id "${{ secrets.APPLE_ID }}" \
+            --team-id "${{ secrets.APPLE_TEAM_ID }}" \
+            --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}"
+
+          echo "Stapling..."
+          for binary in bun bunv bunx; do
+            xcrun stapler staple "$binary"
+          done
+
+      - uses: vimtor/action-zip@v1.2
+        with:
+          files: zig-out/bin/bun zig-out/bin/bunx zig-out/bin/bunv
+          dest: bunv-${{matrix.os}}-${{matrix.arch}}.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bunv-${{matrix.os}}-${{matrix.arch}}
+          path: "*.zip"
+          if-no-files-found: error
