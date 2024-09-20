@@ -254,7 +254,10 @@ const PackageJsonVersionFile = struct {
 
         // "bun@X.Y.Z"
         if (parsed.value.object.get("packageManager")) |package_manager| {
-            return allocator.dupe(u8, package_manager.string[4..]) catch return null;
+            const str = package_manager.string;
+            if (mem.eql(u8, str[0..4], "bun@")) {
+                return allocator.dupe(u8, str[4..]) catch return null;
+            }
         }
         return null;
     }
