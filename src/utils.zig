@@ -105,8 +105,8 @@ fn runBunCmd(allocator: mem.Allocator, args: [][]const u8) (std.process.ExecvErr
         proc.stderr_behavior = .Inherit;
         try proc.spawn();
         switch (try proc.wait()) {
-            .Exited => |code| std.process.exit(code),
-            else => std.process.cleanExit(),
+            .Exited => |code| return std.process.exit(code),
+            else => return std.process.cleanExit(),
         }
     }
 }
