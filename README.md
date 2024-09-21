@@ -24,7 +24,6 @@ Goal of `bunv` is to provide a PoC for what version management might look like b
 
 That said, there's a couple of things left to do:
 
-- [Windows support `#5`](https://github.com/aklinker1/bunv/issues/5)
 - [Support `.tool-versions` files `#7`](https://github.com/aklinker1/bunv/issues/7)
 - [Support `.bunv-version` files `#8`](https://github.com/aklinker1/bunv/issues/8)
 
