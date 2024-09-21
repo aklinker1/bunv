@@ -50,12 +50,12 @@ jobs:
           done
           ls -lA
 
-          echo "Notarizing..."
-          ditto -c -k --keepParent . binaries.zip
-          xcrun notarytool submit binaries.zip --wait \
-            --apple-id "${{ secrets.APPLE_ID }}" \
-            --team-id "${{ secrets.APPLE_TEAM_ID }}" \
-            --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}"
+          # echo "Notarizing..."
+          # ditto -c -k --keepParent . binaries.zip
+          # xcrun notarytool submit binaries.zip --wait \
+          #   --apple-id "${{ secrets.APPLE_ID }}" \
+          #   --team-id "${{ secrets.APPLE_TEAM_ID }}" \
+          #   --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}"
 
           # echo "Stapling..."
           # for binary in bun bunv bunx; do
