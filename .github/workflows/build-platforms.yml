@@ -57,11 +57,11 @@ jobs:
             --team-id "${{ secrets.APPLE_TEAM_ID }}" \
             --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}"
 
-          echo "Stapling..."
-          for binary in bun bunv bunx; do
-            codesign --verify --verbose "$binary"
-            xcrun stapler staple -v "$binary"
-          done
+          # echo "Stapling..."
+          # for binary in bun bunv bunx; do
+          #   codesign --verify --verbose "$binary"
+          #   xcrun stapler staple -v "$binary"
+          # done
 
       - uses: vimtor/action-zip@v1.2
         with:
