@@ -1,4 +1,14 @@
-# 0.2.0 (2024-09-17)
+## [0.2.1](https://github.com/aklinker1/bunv/compare/v0.2.0...v0.2.1) (2024-09-21)
+
+
+### Bug Fixes
+
+* Correctly sign executables for MacOS ([#9](https://github.com/aklinker1/bunv/issues/9)) ([e348ee2](https://github.com/aklinker1/bunv/commit/e348ee2c74d764d54ec43c400e55d3a3b00ad2df))
+* Only respect 'bun@' packageManager prefix ([4ccf6da](https://github.com/aklinker1/bunv/commit/4ccf6dad5ffdccd526fbd9563033037c40c36311))
+
+
+
+# [0.2.0](https://github.com/aklinker1/bunv/compare/fb821eab420c58371b0f38b4b5a7626840b508cd...v0.2.0) (2024-09-17)
 
 
 ### Bug Fixes
