@@ -1,3 +1,12 @@
+## [0.3.1](https://github.com/aklinker1/bunv/compare/v0.3.0...v0.3.1) (2024-09-21)
+
+
+### Bug Fixes
+
+* Properly ZIP release binaries for windows ([924458d](https://github.com/aklinker1/bunv/commit/924458daa81e331b6ce795907f8143972e4c4bc6))
+
+
+
 # [0.3.0](https://github.com/aklinker1/bunv/compare/v0.2.1...v0.3.0) (2024-09-21)
 
 
