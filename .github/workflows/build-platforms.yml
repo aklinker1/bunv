@@ -56,11 +56,6 @@ jobs:
             --team-id "${{ secrets.APPLE_TEAM_ID }}" \
             --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}"
 
-          echo "Stapling..."
-          for binary in bun bunv bunx; do
-            xcrun stapler staple "$binary"
-          done
-
       - uses: vimtor/action-zip@v1.2
         with:
           files: zig-out/bin/bun zig-out/bin/bunx zig-out/bin/bunv
