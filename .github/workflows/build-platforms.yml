@@ -48,7 +48,6 @@ jobs:
           for binary in bun bunv bunx; do
             codesign --force --options runtime --sign "${{ secrets.APPLE_CERT_NAME }}" "$binary"
           done
-          ls -lA
 
           echo "Notarizing..."
           ditto -c -k --keepParent . binaries.zip
@@ -56,12 +55,6 @@ jobs:
             --apple-id "${{ secrets.APPLE_ID }}" \
             --team-id "${{ secrets.APPLE_TEAM_ID }}" \
             --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}"
-
-          # echo "Stapling..."
-          # for binary in bun bunv bunx; do
-          #   codesign --verify --verbose "$binary"
-          #   xcrun stapler staple -v "$binary"
-          # done
 
       - uses: vimtor/action-zip@v1.2
         with:
