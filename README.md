@@ -4,13 +4,13 @@
   <a href="https://github.com/aklinker1/bunv"><img src="https://img.shields.io/github/stars/aklinker1/bunv?style=social" alt="GitHub stars"></a>
 </div>
 
-Zero config wrapper around [Bun](https://bun.sh/) that automatically downloads, manages, and executes the version of `bun` required by each of your projects.
-
-Basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But written in Zig for [basically zero overhead](#benchmark).
-
 ```sh
 curl -sL https://raw.githubusercontent.com/aklinker1/bunv/main/install.sh | sh
 ```
+
+Zero config wrapper around [Bun](https://bun.sh/) that automatically downloads, manages, and executes the version of `bun` required by each of your projects.
+
+Basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But written in Zig for [basically zero overhead](#benchmark).
 
 ## Features
 
