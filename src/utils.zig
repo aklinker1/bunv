@@ -95,7 +95,7 @@ pub fn file_exists(file: []u8) !bool {
     return true;
 }
 
-fn runBunCmd(allocator: mem.Allocator, args: [][]const u8) std.process.ExecvError {
+fn runBunCmd(allocator: mem.Allocator, args: [][]const u8) (std.process.ExecvError || std.process.Child.SpawnError) {
     if (builtin.os.tag != .windows) {
         return std.process.execv(allocator, args);
     } else {
