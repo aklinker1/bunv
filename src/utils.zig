@@ -3,6 +3,7 @@ const os = std.os;
 const mem = std.mem;
 const fs = std.fs;
 const json = std.json;
+const builtin = @import("builtin");
 const vm = @import("vm.zig");
 
 pub const Cmd = enum {
@@ -95,5 +96,17 @@ pub fn file_exists(file: []u8) !bool {
 }
 
 fn runBunCmd(allocator: mem.Allocator, args: [][]const u8) std.process.ExecvError {
-    return std.process.execv(allocator, args);
+    if (builtin.os.tag != .windows) {
+        return std.process.execv(allocator, args);
+    } else {
+        var proc = std.process.Child.init(args, allocator);
+        proc.stdin_behavior = .Inherit;
+        proc.stdout_behavior = .Inherit;
+        proc.stderr_behavior = .Inherit;
+        try proc.spawn();
+        switch (try proc.wait()) {
+            .Exited => |code| std.process.exit(code),
+            else => std.process.cleanExit(),
+        }
+    }
 }
