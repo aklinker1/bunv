@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/aklinker1/bunv/compare/v0.2.1...v0.3.0) (2024-09-21)
+
+
+### Features
+
+* Add windows support ([#10](https://github.com/aklinker1/bunv/issues/10)) ([66f0b4d](https://github.com/aklinker1/bunv/commit/66f0b4d5dd3b7c69983ba23aa11106d2fb88e078))
+
+
+
 ## [0.2.1](https://github.com/aklinker1/bunv/compare/v0.2.0...v0.2.1) (2024-09-21)
 
 
