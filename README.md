@@ -8,6 +8,10 @@ Zero config wrapper around [Bun](https://bun.sh/) that automatically downloads, 
 
 Basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But written in Zig for [basically zero overhead](#benchmark).
 
+```sh
+curl -sL https://raw.githubusercontent.com/aklinker1/bunv/main/install.sh | sh
+```
+
 ## Features
 
 - Automatic version selection for `bun` and `bunx`
@@ -29,11 +33,13 @@ That said, there's a couple of things left to do:
 
 ### Use Prebuilt Binaries
 
-1. Uninstall [`bun`](https://bun.sh/docs/installation#uninstall) or remove `~/.bun/bin` from your path
-2. Go to the [latest release](https://github.com/aklinker1/bunv/releases/latest) and download the ZIP for your operating system
-3. Extract the ZIP and move the files into `~/.bunv/bin` (so you should have `~/.bunv/bin/bun`, `~/.bunv/bin/bunx`, and `~/.bunv/bin/bunv`)
-4. Add `~/.bunv/bin` to your `PATH`
-5. Double check that `which bun` outputs `~/.bunv/bin/bun`
+1. Uninstall [`bun`](https://bun.sh/docs/installation#uninstall) and/or remove `~/.bun/bin` from your path
+2. Run installer:
+   ```sh
+   curl -sL https://raw.githubusercontent.com/aklinker1/bunv/main/install.sh | sh
+   ```
+3. Add `~/.bunv/bin` to your `PATH`
+4. Ensure `which bun` outputs `~/.bunv/bin/bun`
 
 ### Build from source
 
