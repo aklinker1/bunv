@@ -1,4 +1,4 @@
 {
   "version": "0.3.1",
-  "packageManager": "bun@1.1.27"
+  "packageManager.example": "bun@1.1.27"
 }

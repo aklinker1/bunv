@@ -43,7 +43,7 @@ pub fn getInstalledVersions(allocator: mem.Allocator, config_dir: []const u8) !s
 pub fn detectProjectVersion(allocator: mem.Allocator, is_debug: bool) !?[]const u8 {
     const files = comptime [_]VersionFile{
         PackageJsonVersionFile.init(),
-        // BunVersionFile.init(),
+        BunVersionFile.init(),
         // ToolVersionsFile.init(),
     };
 
@@ -271,7 +271,7 @@ const BunVersionFile = struct {
         };
     }
     fn extractBunVersion(allocator: mem.Allocator, contents: []u8) ?[]u8 {
-        return try allocator.dupe(u8, contents) catch |err| switch (err) {
+        return allocator.dupe(u8, mem.trim(u8, contents, &std.ascii.whitespace)) catch |err| switch (err) {
             else => return null,
         };
     }
