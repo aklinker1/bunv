@@ -1,3 +1,13 @@
+## [0.3.2](https://github.com/aklinker1/bunv/compare/v0.3.1...v0.3.2) (2025-03-08)
+
+
+### Bug Fixes
+
+* Fix typos in logs ([0bbe92c](https://github.com/aklinker1/bunv/commit/0bbe92c6bb73ed3d597dbefa01b525b5d952c493))
+* Support `.bun-version` file ([1c70d2b](https://github.com/aklinker1/bunv/commit/1c70d2bee4dd0b70ce5f9c9d97e10516b1f8cf25))
+
+
+
 ## [0.3.1](https://github.com/aklinker1/bunv/compare/v0.3.0...v0.3.1) (2024-09-21)
 
 
