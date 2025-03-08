@@ -88,7 +88,7 @@ pub fn detectProjectVersion(allocator: mem.Allocator, is_debug: bool) !?[]const 
 }
 
 pub fn getLatestLocalVersion(allocator: mem.Allocator, is_debug: bool, config_dir: []const u8) !?[]const u8 {
-    if (is_debug) std.debug.print("Getting latest local verison...\n", .{});
+    if (is_debug) std.debug.print("Getting latest local version...\n", .{});
 
     const installed_versions = try getInstalledVersions(allocator, config_dir);
     if (is_debug) std.debug.print("{d} versions: {s}\n", .{ installed_versions.items.len, installed_versions.items });
@@ -107,7 +107,7 @@ pub fn getLatestLocalVersion(allocator: mem.Allocator, is_debug: bool, config_di
 }
 
 pub fn getLatestRemoteVersion(allocator: mem.Allocator, is_debug: bool) ![]const u8 {
-    if (is_debug) std.debug.print("Getting latest remote verison...\n", .{});
+    if (is_debug) std.debug.print("Getting latest remote version...\n", .{});
 
     var client = http.Client{ .allocator = allocator };
     defer client.deinit();
