@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-INSTALL_DIR=${!BUNV_INSTALL:-$HOME/.bunv}
+INSTALL_DIR=${BUNV_INSTALL:-$HOME/.bunv}
 BIN_DIR="$INSTALL_DIR/bin"
 
 # Determine OS and architecture
