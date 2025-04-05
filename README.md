@@ -29,6 +29,12 @@ That said, there's a couple of things left to do:
 
 ## Installation
 
+### Use Brew
+
+```sh
+brew install simnalamburt/x/bunv
+```
+
 ### Use Prebuilt Binaries
 
 1. Uninstall [`bun`](https://bun.sh/docs/installation#uninstall) and/or remove `~/.bun/bin` from your path
