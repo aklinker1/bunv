@@ -226,10 +226,14 @@ fn confirmInstallation(version: []const u8) !void {
 }
 
 pub fn getVersionsDir(allocator: mem.Allocator, config_dir: []const u8) ![]u8 {
-    return try fs.path.join(allocator, &[_][]const u8{ config_dir, "versions" });
+    const versions_dir = try fs.path.join(allocator, &[_][]const u8{ config_dir, "versions" });
+    try utils.ensureDirExists(versions_dir);
+    return versions_dir;
 }
 pub fn getVersionDir(allocator: mem.Allocator, config_dir: []const u8, version: []const u8) ![]u8 {
-    return try fs.path.join(allocator, &[_][]const u8{ config_dir, "versions", version });
+    const version_dir = try fs.path.join(allocator, &[_][]const u8{ config_dir, "versions", version });
+    try utils.ensureDirExists(version_dir);
+    return version_dir;
 }
 pub fn getBinPath(allocator: mem.Allocator, config_dir: []const u8, version: []const u8) ![]u8 {
     return try fs.path.join(allocator, &[_][]const u8{ config_dir, "versions", version, "bin", "bun" });

@@ -61,7 +61,8 @@ fn getHomeDir(allocator: mem.Allocator) ![]const u8 {
     }
 }
 
-/// Grab the BUNV_INSTALL environment variable or use ".bunv", and resolve relative to the home directory
+/// Grab the BUNV_INSTALL environment variable or use ".bunv", resolve relative to the home directory,
+/// and ensure the directory exists
 pub fn getConfigDir(allocator: mem.Allocator, is_debug: bool) ![]const u8 {
     var env_map = try std.process.getEnvMap(allocator);
     defer env_map.deinit();
@@ -72,7 +73,11 @@ pub fn getConfigDir(allocator: mem.Allocator, is_debug: bool) ![]const u8 {
     defer allocator.free(home_dir);
 
     if (is_debug) std.debug.print("Home Dir: {s}\n", .{home_dir});
-    return try fs.path.join(allocator, &[_][]const u8{ home_dir, bunv_install });
+    const config_dir = try fs.path.join(allocator, &[_][]const u8{ home_dir, bunv_install });
+    
+    try ensureDirExists(config_dir);
+    
+    return config_dir;
 }
 
 /// Check to see if the DEBUG environment variable is set to "bunv"
@@ -93,6 +98,20 @@ pub fn file_exists(file: []u8) !bool {
         else => |e| return e,
     };
     return true;
+}
+
+/// Create a directory and any required parent directories if they don't exist
+pub fn ensureDirExists(path: []const u8) !void {
+    fs.makeDirAbsolute(path) catch |err| switch (err) {
+        error.PathAlreadyExists => return,
+        error.FileNotFound => {
+            // Parent directory doesn't exist, attempt to create it
+            const parent_path = fs.path.dirname(path) orelse return err;
+            try ensureDirExists(parent_path);
+            try fs.makeDirAbsolute(path);
+        },
+        else => return err,
+    };
 }
 
 fn runBunCmd(allocator: mem.Allocator, args: [][]const u8) (std.process.ExecvError || std.process.Child.SpawnError) {
