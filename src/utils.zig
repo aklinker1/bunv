@@ -102,26 +102,15 @@ pub fn file_exists(file: []u8) !bool {
 
 /// Create a directory and any required parent directories if they don't exist
 pub fn ensureDirExists(path: []const u8) !void {
-    // Try to print some data about the directory we're trying to create
-    std.debug.print("Creating directory: {s}\n", .{path});
-
     fs.makeDirAbsolute(path) catch |err| switch (err) {
-        error.PathAlreadyExists => {
-            std.debug.print("Directory already exists: {s}\n", .{path});
-            return;
-        },
+        error.PathAlreadyExists => return,
         error.FileNotFound => {
-            std.debug.print("Parent directory doesn't exist for: {s}\n", .{path});
             // Parent directory doesn't exist, attempt to create it
             const parent_path = fs.path.dirname(path) orelse return err;
             try ensureDirExists(parent_path);
             try fs.makeDirAbsolute(path);
-            std.debug.print("Created directory: {s}\n", .{path});
         },
-        else => {
-            std.debug.print("Error creating directory {s}: {s}\n", .{ path, @errorName(err) });
-            return err;
-        },
+        else => return err,
     };
 }
 
