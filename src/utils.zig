@@ -74,9 +74,9 @@ pub fn getConfigDir(allocator: mem.Allocator, is_debug: bool) ![]const u8 {
 
     if (is_debug) std.debug.print("Home Dir: {s}\n", .{home_dir});
     const config_dir = try fs.path.join(allocator, &[_][]const u8{ home_dir, bunv_install });
-    
+
     try ensureDirExists(config_dir);
-    
+
     return config_dir;
 }
 
