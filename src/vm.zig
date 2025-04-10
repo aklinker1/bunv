@@ -211,16 +211,25 @@ pub fn ensureVersionDownloaded(allocator: mem.Allocator, config_dir: []const u8,
 
 fn confirmInstallation(version: []const u8) !void {
     const stdout = std.io.getStdOut().writer();
-    const stdin = std.io.getStdIn().reader();
 
-    try stdout.print("{s}Bun v{s} is not installed. Do you want to install it? [y/N]{s} ", .{ c.yellow, version, c.reset });
-    var buffer: [2]u8 = undefined;
-    const user_input = stdin.readUntilDelimiterOrEof(&buffer, '\n') catch |err| switch (err) {
-        error.StreamTooLong => "N",
-        else => return err,
-    } orelse "N";
+    // Check if stdin is a TTY (interactive)
+    const is_interactive = std.io.getStdIn().isTty();
 
-    if (mem.eql(u8, user_input, "y")) return;
+    if (is_interactive) {
+        const stdin = std.io.getStdIn().reader();
+
+        try stdout.print("{s}Bun v{s} is not installed. Do you want to install it? [y/N]{s} ", .{ c.yellow, version, c.reset });
+        var buffer: [2]u8 = undefined;
+        const user_input = stdin.readUntilDelimiterOrEof(&buffer, '\n') catch |err| switch (err) {
+            error.StreamTooLong => "N",
+            else => return err,
+        } orelse "N";
+
+        if (mem.eql(u8, user_input, "y")) return;
+    } else {
+        // Non-interactive mode, just display message and abort
+        try stdout.print("{s}Bun v{s} is not installed. Run in an interactive terminal to install.{s}\n", .{ c.yellow, version, c.reset });
+    }
 
     return error.UserAborted;
 }
