@@ -6,5 +6,5 @@ pub fn main() !void {
     defer _ = gpa.deinit();
 
     const allocator = gpa.allocator();
-    utils.run_main(allocator, utils.Cmd.bunx);
+    try utils.run(allocator, utils.Cmd.bunx);
 }
