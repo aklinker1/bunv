@@ -11,16 +11,6 @@ pub const Cmd = enum {
     bunx,
 };
 
-/// Wrapper for run that handles common errors like UserAborted
-pub fn run_main(allocator: mem.Allocator, cmd: Cmd) void {
-    run(allocator, cmd) catch |err| {
-        // Just exit gracefully for UserAborted since we already displayed an error message
-        if (err == error.UserAborted) std.process.exit(1);
-        std.debug.print("Error: {s}\n", .{@errorName(err)});
-        std.process.exit(1);
-    };
-}
-
 pub fn run(allocator: mem.Allocator, cmd: Cmd) !void {
     const is_debug = try isDebug(allocator);
     if (is_debug) std.debug.print("Executable: {}\n", .{cmd});

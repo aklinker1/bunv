@@ -249,7 +249,8 @@ fn confirmInstallation(version: []const u8) !void {
         try stdout.print("{s}Bun v{s} is not installed. Run in an interactive terminal to install or set BUNV_AUTO_INSTALL=1.{s}\n", .{ c.yellow, version, c.reset });
     }
 
-    return error.UserAborted;
+    std.debug.print("Installation aborted by user\n", .{});
+    std.process.exit(1);
 }
 
 pub fn getVersionsDir(allocator: mem.Allocator, config_dir: []const u8) ![]u8 {
