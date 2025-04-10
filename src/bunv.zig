@@ -33,6 +33,10 @@ pub fn main() !void {
 
 fn printInstalledVersions(allocator: mem.Allocator, config_dir: []const u8, versions: std.ArrayList([]const u8)) !void {
     std.debug.print("{s}Installed versions:{s}\n", .{ c.bold, c.reset });
+    if (versions.items.len == 0) {
+        std.debug.print("  {s}No versions installed{s}\n", .{ c.yellow, c.reset });
+        return;
+    }
     for (versions.items) |version| {
         const directory = try vm.getVersionDir(allocator, config_dir, version);
         defer allocator.free(directory);
