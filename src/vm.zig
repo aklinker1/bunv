@@ -210,6 +210,18 @@ pub fn ensureVersionDownloaded(allocator: mem.Allocator, config_dir: []const u8,
 }
 
 fn confirmInstallation(version: []const u8) !void {
+    var env_map = try std.process.getEnvMap(std.heap.page_allocator);
+    defer env_map.deinit();
+
+    // Check if auto-install is enabled via environment variable
+    if (env_map.get("BUNV_AUTO_INSTALL")) |value| {
+        if (mem.eql(u8, value, "1")) {
+            // Automatically proceed with installation
+            std.debug.print("{s}Bun v{s} is not installed. Auto-installing...{s}\n", .{ c.yellow, version, c.reset });
+            return;
+        }
+    }
+    
     const stdout = std.io.getStdOut().writer();
 
     // Check if stdin is a TTY (interactive)
@@ -228,7 +240,7 @@ fn confirmInstallation(version: []const u8) !void {
         if (mem.eql(u8, user_input, "y")) return;
     } else {
         // Non-interactive mode, just display message and abort
-        try stdout.print("{s}Bun v{s} is not installed. Run in an interactive terminal to install.{s}\n", .{ c.yellow, version, c.reset });
+        try stdout.print("{s}Bun v{s} is not installed. Run in an interactive terminal to install or set BUNV_AUTO_INSTALL=1.{s}\n", .{ c.yellow, version, c.reset });
     }
 
     return error.UserAborted;
