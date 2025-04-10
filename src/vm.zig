@@ -44,7 +44,7 @@ pub fn detectProjectVersion(allocator: mem.Allocator, is_debug: bool) !?[]const 
     const files = comptime [_]VersionFile{
         PackageJsonVersionFile.init(),
         BunVersionFile.init(),
-        // ToolVersionsFile.init(),
+        ToolVersionsFile.init(),
     };
 
     var current_dir = try fs.cwd().realpathAlloc(allocator, ".");
@@ -309,17 +309,22 @@ const ToolVersionsFile = struct {
         };
     }
     fn extractBunVersion(allocator: mem.Allocator, contents: []u8) ?[]u8 {
-        const regex = std.regex.compile(allocator, "^bun\\s*(.*?)$", .{});
-        defer std.regex.free(regex);
+        var lines_it = mem.split(u8, contents, "\n");
+        while (lines_it.next()) |line| {
+            // Skip empty lines and comments
+            if (line.len == 0 or line[0] == '#') {
+                continue;
+            }
 
-        const match = try std.regex.match(allocator, regex, contents, 0, contents.len);
-        defer allocator.free(match);
-
-        if (match.len == 0) {
-            return null;
+            // Check if line starts with "bun "
+            if (mem.startsWith(u8, line, "bun ")) {
+                // Extract version part after "bun "
+                const version_part = mem.trim(u8, line[4..], &std.ascii.whitespace);
+                if (version_part.len > 0) {
+                    return allocator.dupe(u8, version_part) catch return null;
+                }
+            }
         }
-
-        const version = match[0].groups[0];
-        return allocator.dupe(u8, version);
+        return null;
     }
 };
