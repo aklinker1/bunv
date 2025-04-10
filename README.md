@@ -22,11 +22,6 @@ Basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But written 
 
 Goal of `bunv` is to provide a PoC for what version management might look like built into Bun. At the time of writing, that's basically done.
 
-That said, there's a couple of things left to do:
-
-- [ ] [Support `.tool-versions` files `#7`](https://github.com/aklinker1/bunv/issues/7)
-- [x] [Support `.bunv-version` files `#8`](https://github.com/aklinker1/bunv/issues/8)
-
 ## Installation
 
 ### Use Brew
