@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build Commands
 - Build all executables to `./zig-out/bin`: `zig build`
-- Build and run specific executable: `zig build bun -- [args]`, `zig build bunx -- [args]`, or `zig build bunv -- [args]`
+- Run an executable: `./zig-out/bin/bun --version`
 - Release build and install to path: `zig build --release=fast --prefix ~/.bunv`
 
 ## Code Style Guidelines
