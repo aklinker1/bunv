@@ -159,6 +159,9 @@ pub fn ensureVersionDownloaded(allocator: mem.Allocator, config_dir: []const u8,
 
     std.debug.print("Installing...\n", .{});
 
+    // Ensure the config directory exists before proceeding
+    try fs.makeDirAbsolute(config_dir);
+
     const install_script_path = try fs.path.join(allocator, &[_][]const u8{ config_dir, "install.sh" });
     defer allocator.free(install_script_path);
 
