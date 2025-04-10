@@ -221,7 +221,7 @@ fn confirmInstallation(version: []const u8) !void {
             return;
         }
     }
-    
+
     const stdout = std.io.getStdOut().writer();
 
     // Check if stdin is a TTY (interactive)
