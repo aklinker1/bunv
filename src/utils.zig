@@ -11,7 +11,6 @@ pub const Cmd = enum {
     bunx,
 };
 
-
 pub fn run(allocator: mem.Allocator, cmd: Cmd) !void {
     const is_debug = try isDebug(allocator);
     if (is_debug) std.debug.print("Executable: {}\n", .{cmd});
