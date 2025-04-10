@@ -309,7 +309,7 @@ const ToolVersionsFile = struct {
         };
     }
     fn extractBunVersion(allocator: mem.Allocator, contents: []u8) ?[]u8 {
-        var lines_it = mem.split(u8, contents, "\n");
+        var lines_it = mem.splitScalar(u8, contents, '\n');
         while (lines_it.next()) |line| {
             // Skip empty lines and comments
             if (line.len == 0 or line[0] == '#') {
