@@ -183,6 +183,11 @@ pub fn ensureVersionDownloaded(allocator: mem.Allocator, config_dir: []const u8,
     defer allocator.free(curlProcess.stderr);
     defer allocator.free(curlProcess.stdout);
 
+    if (curlProcess.term.Exited != 0) {
+        std.debug.print("Failed to download install script:\n\nSTDERR:\n{s}\n\nSTDOUT:\n{s}\n", .{curlProcess.stderr, curlProcess.stdout});
+        std.process.exit(1);
+    }
+
     // Run install script
 
     const version_path = try fs.path.join(allocator, &[_][]const u8{ config_dir, "versions", version });
@@ -211,6 +216,12 @@ pub fn ensureVersionDownloaded(allocator: mem.Allocator, config_dir: []const u8,
     });
     defer allocator.free(installProcess.stderr);
     defer allocator.free(installProcess.stdout);
+
+    if (installProcess.term.Exited == 0) {
+        std.debug.print("Failed to install Bun:\n\nSTDERR:\n{s}\n\nSTDOUT:\n{s}\n", .{installProcess.stderr, installProcess.stdout});
+        std.process.exit(1);
+    }
+
 
     std.debug.print("{s}✓{s} Done! {s}Bun v{s}{s} is installed\n", .{ c.green, c.reset, c.cyan, version, c.reset });
 }
