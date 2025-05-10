@@ -1,3 +1,12 @@
+## [0.4.1](https://github.com/aklinker1/bunv/compare/v0.4.0...v0.4.1) (2025-05-10)
+
+
+### Bug Fixes
+
+* Kill the process if bun fails to install ([41c8409](https://github.com/aklinker1/bunv/commit/41c84091bec060ff5fab94dd596bffe4140170ef))
+
+
+
 # [0.4.0](https://github.com/aklinker1/bunv/compare/v0.3.2...v0.4.0) (2025-04-10)
 
 
