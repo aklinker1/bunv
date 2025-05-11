@@ -3,6 +3,7 @@ set -e
 
 INSTALL_DIR=${BUNV_INSTALL:-$HOME/.bunv}
 BIN_DIR="$INSTALL_DIR/bin"
+TAG=${BUNV_VERSION:-latest}
 
 # Determine OS and architecture
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -42,7 +43,7 @@ case "$OS" in
 esac
 
 # Set the download URL
-DOWNLOAD_URL="https://github.com/aklinker1/bunv/releases/latest/download/bunv-$OS-$ARCH.zip"
+DOWNLOAD_URL="https://github.com/aklinker1/bunv/releases/${TAG}/download/bunv-$OS-$ARCH.zip"
 
 # Create temporary directory
 TMP_DIR=$(mktemp -d)
