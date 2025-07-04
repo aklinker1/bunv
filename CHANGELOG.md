@@ -1,3 +1,12 @@
+## [0.4.2](https://github.com/aklinker1/bunv/compare/v0.4.1...v0.4.2) (2025-07-04)
+
+
+### Bug Fixes
+
+* correct exit code check for bun installation process ([#29](https://github.com/aklinker1/bunv/issues/29)) ([623ed6d](https://github.com/aklinker1/bunv/commit/623ed6dd8e9fe1d3ee8d88f7bd4f243670a96a89))
+
+
+
 ## [0.4.1](https://github.com/aklinker1/bunv/compare/v0.4.0...v0.4.1) (2025-05-10)
 
 
