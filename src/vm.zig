@@ -217,7 +217,7 @@ pub fn ensureVersionDownloaded(allocator: mem.Allocator, config_dir: []const u8,
     defer allocator.free(installProcess.stderr);
     defer allocator.free(installProcess.stdout);
 
-    if (installProcess.term.Exited == 0) {
+    if (installProcess.term.Exited != 0) {
         std.debug.print("Failed to install Bun:\n\nSTDERR:\n{s}\n\nSTDOUT:\n{s}\n", .{ installProcess.stderr, installProcess.stdout });
         std.process.exit(1);
     }
