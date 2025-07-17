@@ -1,3 +1,12 @@
+## [0.4.3](https://github.com/aklinker1/bunv/compare/v0.4.2...v0.4.3) (2025-07-17)
+
+
+### Bug Fixes
+
+* Use bash to run install script ([#30](https://github.com/aklinker1/bunv/issues/30)) ([44175c6](https://github.com/aklinker1/bunv/commit/44175c67e7a8028eb1a4293dce5b35405d7336e5))
+
+
+
 ## [0.4.2](https://github.com/aklinker1/bunv/compare/v0.4.1...v0.4.2) (2025-07-04)
 
 
