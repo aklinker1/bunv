@@ -208,7 +208,7 @@ pub fn ensureVersionDownloaded(allocator: mem.Allocator, config_dir: []const u8,
     const installProcess = try std.process.Child.run(.{
         .allocator = allocator,
         .argv = &[_][]const u8{
-            "sh",
+            "bash",
             install_script_path,
             version_arg,
         },
