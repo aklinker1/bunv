@@ -16,7 +16,10 @@ Basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But written 
 
 - Automatic version selection for `bun` and `bunx`
 - Manage installed versions with `bunv`
-- Read project version from `package.json`'s `packageManager` field, just like Corepack
+- Read project version from multiple files:
+   - `package.json`'s `packageManager` field (just like Corepack)
+   - `.bun-version`
+   - `.tool-versions`
 
 ### Roadmap
 
@@ -25,6 +28,8 @@ Goal of `bunv` is to provide a PoC for what version management might look like b
 ## Installation
 
 ### Use Brew
+
+Use the third-party tap:
 
 ```sh
 brew install simnalamburt/x/bunv
@@ -65,6 +70,13 @@ $ bunx oxlint@latest
 
 If you haven't installed the version of Bun required by your project, you'll be prompted to install it when running any `bun` or `bunx` commands.
 
+```sh
+$ bun run main.ts
+Bun v1.3.0 is not installed. Do you want to install it? [y/N] y
+Installing...
+✓ Done! Bun v1.3.0 is installed
+```
+
 Bunv also ships its own executable: `bunv`. Right now, it just lists the versions of Bun it has installed:
 
 ```sh
@@ -74,6 +86,11 @@ Installed versions:
     │  Directory: /home/aklinker1/.bunv/versions/1.1.26
     │  Bin Dir:   /home/aklinker1/.bunv/versions/1.1.26/bin
     └─ Bin:       /home/aklinker1/.bunv/versions/1.1.26/bin/bun
+  v1.3.0
+    │  Directory: /home/aklinker1/.bunv/versions/1.3.0
+    │  Bin Dir:   /home/aklinker1/.bunv/versions/1.3.0/bin
+    └─ Bin:       /home/aklinker1/.bunv/versions/1.3.0/bin/bun
+  ...
 ```
 
 To delete a version of Bun, just delete it's directory:
@@ -88,9 +105,19 @@ If you're not in a project, Bunv will use the newest version installed locally o
 
 `bun upgrade` isn't going to do anything. Instead, update the version of bun in your `package.json`, `.bun-version`, or `.tool-versions` file and it will be installed the next time you run a `bun` command.
 
+```diff
+// package.json
+{
+  ...
+- "packageManager": "bun@1.2.21",
++ "packageManager": "bun@1.3.0",
+  ...
+}
+```
+
 ### GitHub Actions
 
-The `setup/bun` action already supports all the version files Bunv supports - that means you don't have to install Bunv in CI - just use it locally.
+The `oven-sh/setup-bun` action [already supports all the version files Bunv supports](https://github.com/oven-sh/setup-bun?tab=readme-ov-file#inputs) - that means you don't have to install Bunv in CI - just use it locally.
 
 ```yml
 # .github/workflows/validate
@@ -129,7 +156,7 @@ Summary
     1.37 ± 0.12 times faster than /home/aklinker1/.bunv/bin/bun  --version
 ```
 
-1.5ms without `bunv` vs 2.0ms with it. While it's technically 1.37x slower, it's only ***0.5ms of overhead*** - unnoticable to a human.
+1.5ms without `bunv` vs 2.0ms with it. While it's technically 1.37x slower, it's only ***0.5ms of overhead*** - unnoticeable to a human.
 
 > [!NOTE]
 > `hyperfine` struggles to accurately benchmark commands that exit in less than 5ms... If anyone knows a better way to benchmark this, please open a PR!
@@ -139,7 +166,19 @@ Summary
 To print debug logs, set the `DEBUG` environment variable to `bunv`:
 
 ```sh
+$ bun --version
+1.3.0
+
 $ DEBUG=bunv bun --version
+Executable: utils.Cmd.bun
+Home Dir: /path/to/home
+Config Dir: /path/to/home/.bunv
+Checking dir: /path/to/home/path/to/project
+Found v1.2.11 in /path/to/home/path/to/project/package.json
+Original args: { bun, --version }
+Modified args: { /Users/aklinker1/.bunv/versions/1.2.11/bin/bun, --version }
+---
+1.3.0
 ```
 
 ## Development
