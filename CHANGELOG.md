@@ -1,3 +1,12 @@
+# [0.5.0](https://github.com/aklinker1/bunv/compare/v0.4.3...v0.5.0) (2025-10-16)
+
+
+### Features
+
+* Add `bunv rm` command and `bunv help` message ([1596751](https://github.com/aklinker1/bunv/commit/159675185530a24b2f3c5fb80724a239b3f12d64))
+
+
+
 ## [0.4.3](https://github.com/aklinker1/bunv/compare/v0.4.2...v0.4.3) (2025-07-17)
 
 
