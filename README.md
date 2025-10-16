@@ -77,33 +77,36 @@ Installing...
 ✓ Done! Bun v1.3.0 is installed
 ```
 
-Bunv also ships its own executable: `bunv`. Right now, it just lists the versions of Bun it has installed:
+Bunv also ships its own executable: `bunv`. Right now, it has 2 commands:
 
-```sh
-$ bunv
-Installed versions:
-  v1.1.26
-    │  Directory: /home/aklinker1/.bunv/versions/1.1.26
-    │  Bin Dir:   /home/aklinker1/.bunv/versions/1.1.26/bin
-    └─ Bin:       /home/aklinker1/.bunv/versions/1.1.26/bin/bun
-  v1.3.0
-    │  Directory: /home/aklinker1/.bunv/versions/1.3.0
-    │  Bin Dir:   /home/aklinker1/.bunv/versions/1.3.0/bin
-    └─ Bin:       /home/aklinker1/.bunv/versions/1.3.0/bin/bun
-  ...
-```
-
-To delete a version of Bun, just delete it's directory:
-
-```sh
-$ rm -rf ~/.bunv/versions/1.1.26
-```
+1. List installed versions:
+   ```sh
+   $ bunv
+   Installed versions:
+     v1.1.26
+       │  Directory: ~/.bunv/versions/1.1.26
+       │  Bin Dir:   ~/.bunv/versions/1.1.26/bin
+       └─ Bin:       ~/.bunv/versions/1.1.26/bin/bun
+     v1.3.0
+       │  Directory: ~/.bunv/versions/1.3.0
+       │  Bin Dir:   ~/.bunv/versions/1.3.0/bin
+       └─ Bin:       ~/.bunv/versions/1.3.0/bin/bun
+     ...
+   ```
+2. Remove an installed version:
+   ```sh
+   bunv rm 1.1.26
+   # or just delete the directory
+   rm -rf ~/.bunv/versions/1.1.26
+   ```
 
 If you're not in a project, Bunv will use the newest version installed locally or if there are none, it will download and install the latest release.
 
 ### Upgrading Bun
 
-`bun upgrade` isn't going to do anything. Instead, update the version of bun in your `package.json`, `.bun-version`, or `.tool-versions` file and it will be installed the next time you run a `bun` command.
+With bunv, `bun upgrade` doesn't do anything.
+
+Instead, update the version of bun in your `package.json`, `.bun-version`, or `.tool-versions` file and it will be installed the next time you run a `bun` command.
 
 ```diff
 // package.json
@@ -142,18 +145,18 @@ If you're using Bun, you probably love the CLI's incredible speed - so do I. Tha
 So this benchmark measures the time it takes for `bun --version` to run.
 
 ```sh
-$ hyperfine -N --warmup 10 --runs 1000 '/home/aklinker1/.bunv/versions/1.1.26/bin/bun --version' '/home/aklinker1/.bunv/bin/bun  --version'
-Benchmark 1: /home/aklinker1/.bunv/versions/1.1.26/bin/bun --version
+$ hyperfine -N --warmup 10 --runs 1000 '~/.bunv/versions/1.1.26/bin/bun --version' '~/.bunv/bin/bun  --version'
+Benchmark 1: ~/.bunv/versions/1.1.26/bin/bun --version
   Time (mean ± σ):       1.5 ms ±   0.1 ms    [User: 1.0 ms, System: 0.4 ms]
   Range (min … max):     1.3 ms …   2.3 ms    1000 runs
 
-Benchmark 2: /home/aklinker1/.bunv/bin/bun  --version
+Benchmark 2: ~/.bunv/bin/bun  --version
   Time (mean ± σ):       2.0 ms ±   0.1 ms    [User: 1.0 ms, System: 0.9 ms]
   Range (min … max):     1.7 ms …   2.3 ms    1000 runs
 
 Summary
-  /home/aklinker1/.bunv/versions/1.1.26/bin/bun --version ran
-    1.37 ± 0.12 times faster than /home/aklinker1/.bunv/bin/bun  --version
+  ~/.bunv/versions/1.1.26/bin/bun --version ran
+  1.37 ± 0.12 times faster than ~/.bunv/bin/bun  --version
 ```
 
 1.5ms without `bunv` vs 2.0ms with it. While it's technically 1.37x slower, it's only ***0.5ms of overhead*** - unnoticeable to a human.
@@ -171,12 +174,12 @@ $ bun --version
 
 $ DEBUG=bunv bun --version
 Executable: utils.Cmd.bun
-Home Dir: /path/to/home
-Config Dir: /path/to/home/.bunv
-Checking dir: /path/to/home/path/to/project
-Found v1.2.11 in /path/to/home/path/to/project/package.json
+Home Dir: ~
+Config Dir: ~/.bunv
+Checking dir: ~/path/to/project
+Found v1.2.11 in ~/path/to/project/package.json
 Original args: { bun, --version }
-Modified args: { /Users/aklinker1/.bunv/versions/1.2.11/bin/bun, --version }
+Modified args: { ~/.bunv/versions/1.2.11/bin/bun, --version }
 ---
 1.3.0
 ```
