@@ -13,7 +13,7 @@ pub fn main() !void {
 
     const is_debug = try utils.isDebug(allocator);
     if (is_debug) {
-        std.debug.print("Bunv Version: {}\n", .{config.version});
+        std.debug.print("Bunv Version: {f}\n", .{config.version});
         std.debug.print("Operating System: {s}\n", .{@tagName(builtin.os.tag)});
         std.debug.print("Architecture: {s}\n", .{@tagName(builtin.cpu.arch)});
     }
@@ -82,7 +82,7 @@ fn printInstalledVersions(allocator: mem.Allocator, config_dir: []const u8, vers
 }
 
 fn printHelp() !void {
-    std.debug.print("\n{s}{s}Bunv{s} - Manage installed versions of Bun {s}({}){s}\n\n", .{ c.bold, c.blue, c.reset, c.dim, config.version, c.reset });
+    std.debug.print("\n{s}{s}Bunv{s} - Manage installed versions of Bun {s}({f}){s}\n\n", .{ c.bold, c.blue, c.reset, c.dim, config.version, c.reset });
     std.debug.print("{s}Commands:{s}\n", .{ c.bold, c.reset });
     std.debug.print("                List installed Bun versions\n", .{});
     std.debug.print("  {s}{s}rm{s} {s}<version>{s}  Remove an installed Bun version\n", .{ c.bold, c.yellow, c.reset, c.dim, c.reset });
