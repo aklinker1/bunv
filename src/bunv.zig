@@ -62,7 +62,7 @@ fn listVersions(allocator: mem.Allocator, config_dir: []const u8) !void {
     try printInstalledVersions(allocator, config_dir, installed_versions);
 }
 
-fn printInstalledVersions(allocator: mem.Allocator, config_dir: []const u8, versions: std.ArrayList([]const u8)) !void {
+fn printInstalledVersions(allocator: mem.Allocator, config_dir: []const u8, versions: std.array_list.Managed([]const u8)) !void {
     std.debug.print("{s}Installed versions:{s}\n", .{ c.bold, c.reset });
     if (versions.items.len == 0) {
         std.debug.print("  {s}No versions installed{s}\n", .{ c.yellow, c.reset });

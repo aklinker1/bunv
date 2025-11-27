@@ -30,7 +30,7 @@ pub fn run(allocator: mem.Allocator, cmd: Cmd) !void {
     const bin = try fs.path.join(allocator, &[_][]const u8{ config_dir, "versions", project_version, "bin", "bun" });
     defer allocator.free(bin);
 
-    var new_args = try std.ArrayList([]const u8).initCapacity(allocator, 5);
+    var new_args = try std.array_list.Managed([]const u8).initCapacity(allocator, 5);
     defer new_args.deinit();
 
     try new_args.append(bin);

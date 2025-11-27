@@ -7,11 +7,11 @@ const http = std.http;
 const utils = @import("utils.zig");
 const c = @import("colors.zig");
 
-pub fn getInstalledVersions(allocator: mem.Allocator, config_dir: []const u8) !std.ArrayList([]const u8) {
+pub fn getInstalledVersions(allocator: mem.Allocator, config_dir: []const u8) !std.array_list.Managed([]const u8) {
     const versions_dir_path = try getVersionsDir(allocator, config_dir);
     defer allocator.free(versions_dir_path);
 
-    var result = std.ArrayList([]const u8).init(allocator);
+    var result = std.array_list.Managed([]const u8).init(allocator);
 
     var versions_dir = fs.openDirAbsolute(versions_dir_path, .{ .iterate = true }) catch |err| switch (err) {
         error.FileNotFound => return result,
