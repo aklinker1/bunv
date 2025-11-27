@@ -30,9 +30,11 @@ pub fn build(b: *std.Build) !void {
 fn addExe(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode, version: std.SemanticVersion, comptime name: []const u8) void {
     const exe = b.addExecutable(.{
         .name = name,
-        .root_source_file = b.path("src/" ++ name ++ ".zig"),
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/" ++ name ++ ".zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
         .version = version,
     });
 
