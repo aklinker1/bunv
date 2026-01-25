@@ -283,3 +283,4 @@ Temporary Items
 # CUSTOM
 .envrc
 package-lock.json
+plans/

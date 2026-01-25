@@ -1,29 +1,31 @@
-<h1 align="center">Bunv</h1>
-<div align="center">
-  <a href="https://github.com/aklinker1/bunv/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
-  <a href="https://github.com/aklinker1/bunv"><img src="https://img.shields.io/github/stars/aklinker1/bunv?style=social" alt="GitHub stars"></a>
-</div>
+# Bunv
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/aklinker1/bunv/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/aklinker1/bunv?style=social)](https://github.com/aklinker1/bunv)
 
 ```sh
 curl -sL https://raw.githubusercontent.com/aklinker1/bunv/main/install.sh | sh
 ```
 
-Zero config wrapper around [Bun](https://bun.sh/) that automatically downloads, manages, and executes the version of `bun` required by each of your projects.
+Zero config wrapper around [Bun](https://bun.sh/) that automatically downloads, manages, and executes the version of
+`bun` required by each of your projects.
 
-Basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But written in Zig for [basically zero overhead](#benchmark).
+Basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But written in Zig
+for [basically zero overhead](#benchmark).
 
 ## Features
 
 - Automatic version selection for `bun` and `bunx`
 - Manage installed versions with `bunv`
-- Read project version from multiple files:
-   - `package.json`'s `packageManager` field (just like Corepack)
-   - `.bun-version`
-   - `.tool-versions`
+- Read the project version from multiple files:
+    - `package.json`'s `packageManager` field (just like Corepack)
+    - `.bun-version`
+    - `.tool-versions`
 
 ### Roadmap
 
-Goal of `bunv` is to provide a PoC for what version management might look like built into Bun. At the time of writing, that's basically done.
+Goal of `bunv` is to provide a PoC for what version management might look like built into Bun. At the time of writing,
+that's basically done.
 
 ## Installation
 
@@ -57,7 +59,7 @@ brew install simnalamburt/x/bunv
    ```sh
    export PATH="$HOME/.bunv/bin:$PATH"
    ```
-5. Double check that `which bun` outputs `~/.bunv/bin/bun`
+5. Double-check that `which bun` outputs `~/.bunv/bin/bun`
 
 ## Usage
 
@@ -68,13 +70,14 @@ $ bun i
 $ bunx oxlint@latest
 ```
 
-If you haven't installed the version of Bun required by your project, you'll be prompted to install it when running any `bun` or `bunx` commands.
+If you haven't installed the version of Bun required by your project, you'll be prompted to install it when running any
+`bun` or `bunx` commands.
 
 ```sh
 $ bun run main.ts
-Bun v1.3.0 is not installed. Do you want to install it? [y/N] y
+Bun v1.3.6 is not installed. Do you want to install it? [y/N] y
 Installing...
-✓ Done! Bun v1.3.0 is installed
+✓ Done! Bun v1.3.6 is installed
 ```
 
 Bunv also ships its own executable: `bunv`. Right now, it has 2 commands:
@@ -87,10 +90,10 @@ Bunv also ships its own executable: `bunv`. Right now, it has 2 commands:
        │  Directory: ~/.bunv/versions/1.1.26
        │  Bin Dir:   ~/.bunv/versions/1.1.26/bin
        └─ Bin:       ~/.bunv/versions/1.1.26/bin/bun
-     v1.3.0
-       │  Directory: ~/.bunv/versions/1.3.0
-       │  Bin Dir:   ~/.bunv/versions/1.3.0/bin
-       └─ Bin:       ~/.bunv/versions/1.3.0/bin/bun
+    v1.3.6
+      │  Directory: ~/.bunv/versions/1.3.6
+      │  Bin Dir:   ~/.bunv/versions/1.3.6/bin
+      └─ Bin:       ~/.bunv/versions/1.3.6/bin/bun
      ...
    ```
 2. Remove an installed version:
@@ -100,27 +103,31 @@ Bunv also ships its own executable: `bunv`. Right now, it has 2 commands:
    rm -rf ~/.bunv/versions/1.1.26
    ```
 
-If you're not in a project, Bunv will use the newest version installed locally or if there are none, it will download and install the latest release.
+If you're not in a project, Bunv will use the newest version installed locally, or if there is none, it will download
+and install the latest release.
 
 ### Upgrading Bun
 
 With bunv, `bun upgrade` doesn't do anything.
 
-Instead, update the version of bun in your `package.json`, `.bun-version`, or `.tool-versions` file and it will be installed the next time you run a `bun` command.
+Instead, update the version of bun in your `package.json`, `.bun-version`, or `.tool-versions` file, and it will be
+installed the next time you run a `bun` command.
 
 ```diff
 // package.json
 {
   ...
-- "packageManager": "bun@1.2.21",
-+ "packageManager": "bun@1.3.0",
+- "packageManager": "bun@1.3.5",
++ "packageManager": "bun@1.3.6",
   ...
 }
 ```
 
 ### GitHub Actions
 
-The `oven-sh/setup-bun` action [already supports all the version files Bunv supports](https://github.com/oven-sh/setup-bun?tab=readme-ov-file#inputs) - that means you don't have to install Bunv in CI - just use it locally.
+The `oven-sh/setup-bun`
+action [already supports all the version files Bunv supports](https://github.com/oven-sh/setup-bun?tab=readme-ov-file#inputs) -
+that means you don't have to install Bunv in CI - just use it locally.
 
 ```yml
 # .github/workflows/validate
@@ -140,7 +147,8 @@ jobs:
 
 ## Benchmark
 
-If you're using Bun, you probably love the CLI's incredible speed - so do I. That's why the only benchmark I focused on is how much overhead it takes for Bunv to lookup and execute the correct version of Bun.
+If you're using Bun, you probably love the CLI's incredible speed - so do I. That's why the only benchmark I focused on
+is how much overhead it takes for Bunv to look up and execute the correct version of Bun.
 
 So this benchmark measures the time it takes for `bun --version` to run.
 
@@ -159,10 +167,12 @@ Summary
   1.37 ± 0.12 times faster than ~/.bunv/bin/bun  --version
 ```
 
-1.5ms without `bunv` vs 2.0ms with it. While it's technically 1.37x slower, it's only ***0.5ms of overhead*** - unnoticeable to a human.
+1.5ms without `bunv` vs 2.0ms with it. While it's technically 1.37x slower, it's only ***0.5ms of overhead*** -
+unnoticeable to a human.
 
 > [!NOTE]
-> `hyperfine` struggles to accurately benchmark commands that exit in less than 5ms... If anyone knows a better way to benchmark this, please open a PR!
+> `hyperfine` struggles to accurately benchmark commands that exit in less than 5ms... If anyone knows a better way to
+> benchmark this, please open a PR!
 
 ## Debugging
 
@@ -170,18 +180,18 @@ To print debug logs, set the `DEBUG` environment variable to `bunv`:
 
 ```sh
 $ bun --version
-1.3.0
+1.3.6
 
 $ DEBUG=bunv bun --version
 Executable: utils.Cmd.bun
 Home Dir: ~
 Config Dir: ~/.bunv
 Checking dir: ~/path/to/project
-Found v1.2.11 in ~/path/to/project/package.json
+Found v1.3.6 in ~/path/to/project/package.json
 Original args: { bun, --version }
-Modified args: { ~/.bunv/versions/1.2.11/bin/bun, --version }
+Modified args: { ~/.bunv/versions/1.3.6/bin/bun, --version }
 ---
-1.3.0
+1.3.6
 ```
 
 ## Development
@@ -199,7 +209,7 @@ $ zig build bunv
 $ zig build
 $ ./zig-out/bin/bun --version
 $ ./zig-out/bin/bunx --version
-$ ./zig-out/bin/bunv --version
+$ ./zig-out/bin/bunv help
 
 # Build and install production executables to ~/.bunv/bin
 $ zig build --release=fast --prefix ~/.bunv
@@ -209,4 +219,5 @@ $ zig build --release=fast --prefix ~/.bunv
 
 To create a release, run the ["Release" action](https://github.com/aklinker1/bunv/actions/workflows/release.yml).
 
-This project uses conventional commits, so the release workflow will bump the version and create the GitHub release automatically.
+This project uses conventional commits, so the release workflow will bump the version and create the GitHub release
+automatically.
