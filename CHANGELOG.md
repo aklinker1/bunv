@@ -1,3 +1,13 @@
+## [0.5.1](https://github.com/aklinker1/bunv/compare/v0.5.0...v0.5.1) (2026-01-31)
+
+
+### Bug Fixes
+
+* Actually use latest version of bun when no project version is found ([d5439ce](https://github.com/aklinker1/bunv/commit/d5439ce913d76af1f3ca9092a0d54e6ecf7b2709))
+* Upgrade zig to 0.15.2 ([#32](https://github.com/aklinker1/bunv/issues/32)) ([2806b13](https://github.com/aklinker1/bunv/commit/2806b13a837ca04875d329fc92fd33e03986f258))
+
+
+
 # [0.5.0](https://github.com/aklinker1/bunv/compare/v0.4.3...v0.5.0) (2025-10-16)
 
 
