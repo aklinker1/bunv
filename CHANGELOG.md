@@ -1,3 +1,12 @@
+## [0.5.2](https://github.com/aklinker1/bunv/compare/v0.5.1...v0.5.2) (2026-01-31)
+
+
+### Bug Fixes
+
+* Update CI so binary has correct version ([6d8d5fb](https://github.com/aklinker1/bunv/commit/6d8d5fb1fe795dc90eaf7998a5af9a331fe0c816))
+
+
+
 ## [0.5.1](https://github.com/aklinker1/bunv/compare/v0.5.0...v0.5.1) (2026-01-31)
 
 
