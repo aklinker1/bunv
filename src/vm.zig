@@ -37,6 +37,15 @@ pub fn getInstalledVersions(allocator: mem.Allocator, config_dir: []const u8) !s
         }
     }
 
+    // Sort by semantic version
+    mem.sort([]const u8, result.items, {}, struct {
+        fn lessThan(_: void, a: []const u8, b: []const u8) bool {
+            const semver_a = std.SemanticVersion.parse(a) catch return true;
+            const semver_b = std.SemanticVersion.parse(b) catch return false;
+            return semver_a.order(semver_b) == .lt;
+        }
+    }.lessThan);
+
     return result;
 }
 
@@ -107,8 +116,11 @@ pub fn getLatestLocalVersion(allocator: mem.Allocator, is_debug: bool, config_di
     if (installed_versions.items.len == 0) {
         return null;
     }
-    // TODO: installed versions are not sorted, so naively assuming the first item is the latest is wrong.
-    return try allocator.dupe(u8, installed_versions.items[0]);
+
+    // Versions are sorted, so the last item is the latest
+    const latest = installed_versions.items[installed_versions.items.len - 1];
+    if (is_debug) std.debug.print("Latest local version: {s}\n", .{latest});
+    return try allocator.dupe(u8, latest);
 }
 
 pub fn getLatestRemoteVersion(allocator: mem.Allocator, is_debug: bool) ![]const u8 {
