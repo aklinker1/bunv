@@ -93,7 +93,8 @@ Bunv also ships its own executable: `bunv`. Right now, it has 2 commands:
    ```
 2. Remove an installed version:
    ```sh
-   # Just delete the directory
+   bunv rm 1.1.26
+   # or just delete the directory
    rm -rf ~/.bunv/versions/1.1.26
    ```
 
