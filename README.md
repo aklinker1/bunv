@@ -23,7 +23,7 @@ Basically [`corepack`](https://github.com/nodejs/corepack) for Bun! But written 
 
 ### Roadmap
 
-Goal of `bunv` is to provide a PoC for what version management might look like built into Bun. At the time of writing, that's basically done.
+Goal of `bunv` is to provide a PoC for what version management might look like built into Bun. At the time of writing, that's done.
 
 ## Installation
 
@@ -85,18 +85,15 @@ Bunv also ships its own executable: `bunv`. Right now, it has 2 commands:
    Installed versions:
      v1.1.26
        │  Directory: ~/.bunv/versions/1.1.26
-       │  Bin Dir:   ~/.bunv/versions/1.1.26/bin
        └─ Bin:       ~/.bunv/versions/1.1.26/bin/bun
      v1.3.0
        │  Directory: ~/.bunv/versions/1.3.0
-       │  Bin Dir:   ~/.bunv/versions/1.3.0/bin
        └─ Bin:       ~/.bunv/versions/1.3.0/bin/bun
      ...
    ```
 2. Remove an installed version:
    ```sh
-   bunv rm 1.1.26
-   # or just delete the directory
+   # Just delete the directory
    rm -rf ~/.bunv/versions/1.1.26
    ```
 
@@ -120,7 +117,7 @@ Instead, update the version of bun in your `package.json`, `.bun-version`, or `.
 
 ### GitHub Actions
 
-The `oven-sh/setup-bun` action [already supports all the version files Bunv supports](https://github.com/oven-sh/setup-bun?tab=readme-ov-file#inputs) - that means you don't have to install Bunv in CI - just use it locally.
+Bunv supports [the same version files as `oven-sh/setup-bun` action](https://github.com/oven-sh/setup-bun?tab=readme-ov-file#inputs) - that means you don't have to install Bunv in CI - just use it locally.
 
 ```yml
 # .github/workflows/validate
