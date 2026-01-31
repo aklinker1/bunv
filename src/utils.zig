@@ -4,12 +4,33 @@ const mem = std.mem;
 const fs = std.fs;
 const json = std.json;
 const builtin = @import("builtin");
+
 const vm = @import("vm.zig");
 
 pub const Cmd = enum {
     bun,
     bunx,
 };
+
+/// Stringify a list of strings into a formatted string representation: ["item1", "item2", "item3"]
+/// Caller owns the returned memory and must free it.
+pub fn stringifyStringList(allocator: mem.Allocator, list: []const []const u8) ![]const u8 {
+    var result: std.ArrayList(u8) = .empty;
+    errdefer result.deinit(allocator);
+
+    try result.append(allocator, '[');
+    for (list, 0..) |item, i| {
+        if (i > 0) {
+            try result.appendSlice(allocator, ", ");
+        }
+        try result.append(allocator, '"');
+        try result.appendSlice(allocator, item);
+        try result.append(allocator, '"');
+    }
+    try result.append(allocator, ']');
+
+    return result.toOwnedSlice(allocator);
+}
 
 pub fn run(allocator: mem.Allocator, cmd: Cmd) !void {
     const is_debug = try isDebug(allocator);
@@ -30,20 +51,26 @@ pub fn run(allocator: mem.Allocator, cmd: Cmd) !void {
     const bin = try fs.path.join(allocator, &[_][]const u8{ config_dir, "versions", project_version, "bin", "bun" });
     defer allocator.free(bin);
 
-    var new_args = try std.array_list.Managed([]const u8).initCapacity(allocator, 5);
-    defer new_args.deinit();
+    var new_args: std.ArrayList([]const u8) = .empty;
+    defer new_args.deinit(allocator);
 
-    try new_args.append(bin);
-    if (cmd == .bunx) try new_args.append("x");
+    try new_args.append(allocator, bin);
+    if (cmd == .bunx) try new_args.append(allocator, "x");
 
     var args = try std.process.argsAlloc(allocator);
     defer std.process.argsFree(allocator, args);
 
     for (args[1..]) |arg| {
-        try new_args.append(arg);
+        try new_args.append(allocator, arg);
     }
 
-    if (is_debug) std.debug.print("Original args: {s}\nModified args: {s}\n---\n", .{ args, new_args.items });
+    if (is_debug) {
+        const original_str = try stringifyStringList(allocator, args);
+        defer allocator.free(original_str);
+        const modified_str = try stringifyStringList(allocator, new_args.items);
+        defer allocator.free(modified_str);
+        std.debug.print("Original args: {s}\nModified args: {s}\n---\n", .{ original_str, modified_str });
+    }
     return runBunCmd(allocator, new_args.items);
 }
 

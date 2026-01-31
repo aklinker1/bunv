@@ -1,10 +1,12 @@
 const std = @import("std");
 const mem = std.mem;
+const builtin = @import("builtin");
+
+const config = @import("config");
+
+const c = @import("colors.zig");
 const utils = @import("utils.zig");
 const vm = @import("vm.zig");
-const builtin = @import("builtin");
-const config = @import("config");
-const c = @import("colors.zig");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -51,18 +53,18 @@ pub fn main() !void {
 }
 
 fn listVersions(allocator: mem.Allocator, config_dir: []const u8) !void {
-    const installed_versions = try vm.getInstalledVersions(allocator, config_dir);
+    var installed_versions = try vm.getInstalledVersions(allocator, config_dir);
     defer {
         for (installed_versions.items) |item| {
             allocator.free(item);
         }
-        installed_versions.deinit();
+        installed_versions.deinit(allocator);
     }
 
     try printInstalledVersions(allocator, config_dir, installed_versions);
 }
 
-fn printInstalledVersions(allocator: mem.Allocator, config_dir: []const u8, versions: std.array_list.Managed([]const u8)) !void {
+fn printInstalledVersions(allocator: mem.Allocator, config_dir: []const u8, versions: std.ArrayList([]const u8)) !void {
     std.debug.print("{s}Installed versions:{s}\n", .{ c.bold, c.reset });
     if (versions.items.len == 0) {
         std.debug.print("  {s}No versions installed{s}\n", .{ c.yellow, c.reset });
@@ -92,12 +94,12 @@ fn printHelp() !void {
 
 fn removeVersion(allocator: mem.Allocator, config_dir: []const u8, version: []const u8) !void {
     // Check if version is installed
-    const installed_versions = try vm.getInstalledVersions(allocator, config_dir);
+    var installed_versions = try vm.getInstalledVersions(allocator, config_dir);
     defer {
         for (installed_versions.items) |item| {
             allocator.free(item);
         }
-        installed_versions.deinit();
+        installed_versions.deinit(allocator);
     }
 
     var version_exists = false;
