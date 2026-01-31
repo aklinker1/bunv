@@ -4,14 +4,15 @@ const mem = std.mem;
 const fs = std.fs;
 const json = std.json;
 const http = std.http;
-const utils = @import("utils.zig");
+
 const c = @import("colors.zig");
+const utils = @import("utils.zig");
 
 pub fn getInstalledVersions(allocator: mem.Allocator, config_dir: []const u8) !std.ArrayList([]const u8) {
     const versions_dir_path = try getVersionsDir(allocator, config_dir);
     defer allocator.free(versions_dir_path);
 
-    var result = std.ArrayList([]const u8).init(allocator);
+    var result: std.ArrayList([]const u8) = .empty;
 
     var versions_dir = fs.openDirAbsolute(versions_dir_path, .{ .iterate = true }) catch |err| switch (err) {
         error.FileNotFound => return result,
@@ -30,7 +31,7 @@ pub fn getInstalledVersions(allocator: mem.Allocator, config_dir: []const u8) !s
         defer allocator.free(bin);
 
         if (try utils.file_exists(bin)) {
-            try result.append(version);
+            try result.append(allocator, version);
         } else {
             allocator.free(version);
         }
@@ -90,13 +91,17 @@ pub fn detectProjectVersion(allocator: mem.Allocator, is_debug: bool) !?[]const 
 pub fn getLatestLocalVersion(allocator: mem.Allocator, is_debug: bool, config_dir: []const u8) !?[]const u8 {
     if (is_debug) std.debug.print("Getting latest local version...\n", .{});
 
-    const installed_versions = try getInstalledVersions(allocator, config_dir);
-    if (is_debug) std.debug.print("{d} versions: {s}\n", .{ installed_versions.items.len, installed_versions.items });
+    var installed_versions = try getInstalledVersions(allocator, config_dir);
+    if (is_debug) {
+        const versions_str = try utils.stringifyStringList(allocator, installed_versions.items);
+        defer allocator.free(versions_str);
+        std.debug.print("{d} versions: {s}\n", .{ installed_versions.items.len, versions_str });
+    }
     defer {
         for (installed_versions.items) |item| {
             allocator.free(item);
         }
-        installed_versions.deinit();
+        installed_versions.deinit(allocator);
     }
 
     if (installed_versions.items.len == 0) {
@@ -120,19 +125,20 @@ pub fn getLatestRemoteVersion(allocator: mem.Allocator, is_debug: bool) ![]const
     const uri = try std.Uri.parse("https://ungh.cc/repos/oven-sh/bun/releases/latest");
     const buf = try allocator.alloc(u8, 1024 * 1024 * 4);
     defer allocator.free(buf);
-    var req = try client.open(
-        .GET,
-        uri,
-        .{ .server_header_buffer = buf, .keep_alive = false, .extra_headers = &[_]http.Header{accept_header} },
-    );
+    var req = try client.request(.GET, uri, .{
+        .keep_alive = false,
+        .headers = .{ .accept_encoding = .omit },
+        .extra_headers = &[_]http.Header{accept_header},
+    });
     defer req.deinit();
 
-    try req.send();
-    try req.finish();
-    try req.wait();
+    try req.sendBodiless();
 
-    var rdr = req.reader();
-    const body = try rdr.readAllAlloc(allocator, 1024 * 1024 * 4);
+    var redirect_buffer: [8 * 1024]u8 = undefined;
+    var response = try req.receiveHead(&redirect_buffer);
+    var transfer_buffer: [4 * 1024]u8 = undefined;
+    const reader = response.reader(&transfer_buffer);
+    const body = try reader.allocRemaining(allocator, .limited(1024 * 1024 * 4));
     defer allocator.free(body);
     if (is_debug) std.debug.print("Latest release: {s}\n", .{body});
 
@@ -238,25 +244,29 @@ fn confirmInstallation(version: []const u8) !void {
         }
     }
 
-    const stdout = std.io.getStdOut().writer();
+    var stdout_buf: [1024]u8 = undefined;
+    var stdout = std.fs.File.stdout().writer(&stdout_buf);
 
     // Check if stdin is a TTY (interactive)
-    const is_interactive = std.io.getStdIn().isTty();
+    const stdin_file = std.fs.File.stdin();
+    const is_interactive = stdin_file.isTty();
 
     if (is_interactive) {
-        const stdin = std.io.getStdIn().reader();
+        var stdin_buf: [1024]u8 = undefined;
+        var stdin = stdin_file.reader(&stdin_buf);
 
-        try stdout.print("{s}Bun v{s} is not installed. Do you want to install it? [y/N]{s} ", .{ c.yellow, version, c.reset });
-        var buffer: [2]u8 = undefined;
-        const user_input = stdin.readUntilDelimiterOrEof(&buffer, '\n') catch |err| switch (err) {
+        try stdout.interface.print("{s}Bun v{s} is not installed. Do you want to install it? [y/N]{s} ", .{ c.yellow, version, c.reset });
+        try stdout.interface.flush();
+        const user_input = stdin.interface.takeDelimiterExclusive('\n') catch |err| switch (err) {
             error.StreamTooLong => "N",
+            error.EndOfStream => "N",
             else => return err,
-        } orelse "N";
+        };
 
         if (mem.eql(u8, user_input, "y")) return;
     } else {
         // Non-interactive mode, just display message and abort
-        try stdout.print("{s}Bun v{s} is not installed. Run in an interactive terminal to install or set BUNV_AUTO_INSTALL=1.{s}\n", .{ c.yellow, version, c.reset });
+        try stdout.interface.print("{s}Bun v{s} is not installed. Run in an interactive terminal to install or set BUNV_AUTO_INSTALL=1.{s}\n", .{ c.yellow, version, c.reset });
     }
 
     std.debug.print("Installation aborted by user\n", .{});

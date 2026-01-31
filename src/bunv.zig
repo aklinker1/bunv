@@ -1,10 +1,12 @@
 const std = @import("std");
 const mem = std.mem;
+const builtin = @import("builtin");
+
+const config = @import("config");
+
+const c = @import("colors.zig");
 const utils = @import("utils.zig");
 const vm = @import("vm.zig");
-const builtin = @import("builtin");
-const config = @import("config");
-const c = @import("colors.zig");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -13,7 +15,7 @@ pub fn main() !void {
 
     const is_debug = try utils.isDebug(allocator);
     if (is_debug) {
-        std.debug.print("Bunv Version: {}\n", .{config.version});
+        std.debug.print("Bunv Version: {f}\n", .{config.version});
         std.debug.print("Operating System: {s}\n", .{@tagName(builtin.os.tag)});
         std.debug.print("Architecture: {s}\n", .{@tagName(builtin.cpu.arch)});
     }
@@ -51,12 +53,12 @@ pub fn main() !void {
 }
 
 fn listVersions(allocator: mem.Allocator, config_dir: []const u8) !void {
-    const installed_versions = try vm.getInstalledVersions(allocator, config_dir);
+    var installed_versions = try vm.getInstalledVersions(allocator, config_dir);
     defer {
         for (installed_versions.items) |item| {
             allocator.free(item);
         }
-        installed_versions.deinit();
+        installed_versions.deinit(allocator);
     }
 
     try printInstalledVersions(allocator, config_dir, installed_versions);
@@ -82,7 +84,7 @@ fn printInstalledVersions(allocator: mem.Allocator, config_dir: []const u8, vers
 }
 
 fn printHelp() !void {
-    std.debug.print("\n{s}{s}Bunv{s} - Manage installed versions of Bun {s}({}){s}\n\n", .{ c.bold, c.blue, c.reset, c.dim, config.version, c.reset });
+    std.debug.print("\n{s}{s}Bunv{s} - Manage installed versions of Bun {s}({f}){s}\n\n", .{ c.bold, c.blue, c.reset, c.dim, config.version, c.reset });
     std.debug.print("{s}Commands:{s}\n", .{ c.bold, c.reset });
     std.debug.print("                List installed Bun versions\n", .{});
     std.debug.print("  {s}{s}rm{s} {s}<version>{s}  Remove an installed Bun version\n", .{ c.bold, c.yellow, c.reset, c.dim, c.reset });
@@ -92,12 +94,12 @@ fn printHelp() !void {
 
 fn removeVersion(allocator: mem.Allocator, config_dir: []const u8, version: []const u8) !void {
     // Check if version is installed
-    const installed_versions = try vm.getInstalledVersions(allocator, config_dir);
+    var installed_versions = try vm.getInstalledVersions(allocator, config_dir);
     defer {
         for (installed_versions.items) |item| {
             allocator.free(item);
         }
-        installed_versions.deinit();
+        installed_versions.deinit(allocator);
     }
 
     var version_exists = false;

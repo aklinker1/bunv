@@ -9,7 +9,7 @@ const bunv = "bunv";
 pub fn build(b: *std.Build) !void {
     const min_zig_version = try std.SemanticVersion.parse("0.13.0");
     if (std.SemanticVersion.order(builtin.zig_version, min_zig_version) == .lt) {
-        std.debug.print("Bunv requires Zig 0.13.0 or above, got {}", .{builtin.zig_version});
+        std.debug.print("Bunv requires Zig 0.13.0 or above, got {f}", .{builtin.zig_version});
         return error.InvalidZigVersion;
     }
 
@@ -30,9 +30,11 @@ pub fn build(b: *std.Build) !void {
 fn addExe(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode, version: std.SemanticVersion, comptime name: []const u8) void {
     const exe = b.addExecutable(.{
         .name = name,
-        .root_source_file = b.path("src/" ++ name ++ ".zig"),
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/" ++ name ++ ".zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
         .version = version,
     });
 
